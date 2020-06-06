@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN" monitorInterval="30">
+    <Properties>
+        <Property name="PID">????</Property>
+        <Property name="LOG_PATTERN">%clr{%d{yyyy-MM-dd HH:mm:ss.SSS}}{faint} %clr{%5p} %clr{${sys:PID}}{magenta} %clr{---}{faint} %clr{[%15.15t]}{faint} %clr{%-40.40c{1.}}{cyan} %clr{:}{faint} %m%n</Property>
+    </Properties>
+    <Appenders>
+        <Socket name="logstash" host="localhost" port="5000">
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+        </Socket>
+        <Console name="Console" target="SYSTEM_OUT" follow="true">
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+        </Console>
+
+        <File name="FileAppender" fileName="logs/app.log">
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+        </File>
+        <Async name="Async">
+            <AppenderRef ref="FileAppender"/>
+        </Async>
+    </Appenders>
+    <Loggers>
+        <Logger name="com.tgarcia.labs.elk" level="debug"  additivity="false">
+            <AppenderRef ref="Console" />
+        </Logger>
+        <Root level="info">
+            <AppenderRef ref="logstash"/>
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="FileAppender"/>
+        </Root>
+    </Loggers>
+</Configuration>
